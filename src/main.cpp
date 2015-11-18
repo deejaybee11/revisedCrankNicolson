@@ -29,7 +29,7 @@ int main(){
 
 	//SimulationData class instance.
 	//SimlationData SimulationData(int num_x, int num_y)
-	SimulationData simData(128, 128);	
+	SimulationData simData(256, 256);	
 	printf("SimulationData Constructed\n");
 	
 	//WaveFunction class instance.
@@ -62,14 +62,13 @@ int main(){
 		solver.solvePardiso(solver, matrices, psi, simData, false);
 	}
 
-	//Reassign Matrix Values
+	//Reassign Matrix Values for Real Computation
 	matrices.reassignMatrixValues(simData, potentialData);	
 
 	solver.initialisePardiso(solver);
 	solver.analysePardiso(solver, matrices, psi);
 	solver.factorizePardiso(solver, matrices, psi);
 
-	simData.fileCount = 0;
 	//Solve for dynamics
 	for (simData.currStep = 0; simData.currStep < simData.numSteps; ++simData.currStep) {
 

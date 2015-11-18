@@ -63,3 +63,5 @@ void saveFITS(double *array, const char *filename, SimulationData &simData) {
 
 	mkl_free(saveArray);
 }
+
+

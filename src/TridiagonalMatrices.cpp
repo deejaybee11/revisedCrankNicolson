@@ -170,14 +170,14 @@ TridiagonalMatrices::TridiagonalMatrices(SimulationData &simData, Potential &pot
 
 	//Diagonal value
 	this->aX[this->numMatrixElements - 1].imag = 0;
-	this->aX[this->numMatrixElements - 1].real = 1 - 0.5 * (-2.0 * this->derivativeCoefficient + potentialData.harmonicTrap[0]) * simData.get_dt() / simData.hbar; 
+	this->aX[this->numMatrixElements - 1].real = 1 - 0.5 * (-2.0 * this->derivativeCoefficient + potentialData.harmonicTrap[this->numMatrixElements - 1]) * simData.get_dt() / simData.hbar; 
 	this->aY[this->numMatrixElements - 1].imag = 0;
-	this->aY[this->numMatrixElements - 1].real = 1 - 0.5 * (-2.0 * this->derivativeCoefficient + potentialData.harmonicTrap[0]) * simData.get_dt() / simData.hbar;
+	this->aY[this->numMatrixElements - 1].real = 1 - 0.5 * (-2.0 * this->derivativeCoefficient + potentialData.harmonicTrap[this->numMatrixElements - 1]) * simData.get_dt() / simData.hbar;
 
 	this->bX[this->numMatrixElements - 1].imag = 0;
-	this->bX[this->numMatrixElements - 1].real = 1 + 0.5 * (-2.0 * this->derivativeCoefficient + potentialData.harmonicTrap[0]) * simData.get_dt() / simData.hbar;
+	this->bX[this->numMatrixElements - 1].real = 1 + 0.5 * (-2.0 * this->derivativeCoefficient + potentialData.harmonicTrap[this->numMatrixElements - 1]) * simData.get_dt() / simData.hbar;
 	this->bY[this->numMatrixElements - 1].imag = 0;
-	this->bY[this->numMatrixElements - 1].real = 1 + 0.5 * (-2.0 * this->derivativeCoefficient + potentialData.harmonicTrap[0]) * simData.get_dt() / simData.hbar;
+	this->bY[this->numMatrixElements - 1].real = 1 + 0.5 * (-2.0 * this->derivativeCoefficient + potentialData.harmonicTrap[this->numMatrixElements - 1]) * simData.get_dt() / simData.hbar;
 
 	//First off diagonal
 	this->aX[this->numMatrixElements - 2].imag = 0;
@@ -262,25 +262,25 @@ TridiagonalMatrices::TridiagonalMatrices(SimulationData &simData, Potential &pot
 
 				//Upper diagonal elements assigned
 				this->aX[index + 1].imag = 0;
-				this->aX[index + 1].real = -0.5 * (-2.0 * this->derivativeCoefficient) * simData.get_dt() / simData.hbar;
+				this->aX[index + 1].real = -0.5 * this->derivativeCoefficient * simData.get_dt() / simData.hbar;
 				this->aY[index + 1].imag = 0;
-				this->aY[index + 1].real = -0.5 * (-2.0 * this->derivativeCoefficient) * simData.get_dt() / simData.hbar;
+				this->aY[index + 1].real = -0.5 * this->derivativeCoefficient * simData.get_dt() / simData.hbar;
 
 				this->bX[index + 1].imag = 0;
-				this->bX[index + 1].real = 0.5 * (-2.0 * this->derivativeCoefficient) * simData.get_dt() / simData.hbar;
+				this->bX[index + 1].real = 0.5 * this->derivativeCoefficient * simData.get_dt() / simData.hbar;
 				this->bY[index + 1].imag = 0;
-				this->bY[index + 1].real = 0.5 * (-2.0 * this->derivativeCoefficient) * simData.get_dt() / simData.hbar;				
+				this->bY[index + 1].real = 0.5 * this->derivativeCoefficient * simData.get_dt() / simData.hbar;				
 
 				//Lower diagonal elements assigned
 				this->aX[index - 1].imag = 0;
-				this->aX[index - 1].real = -0.5 * (-2.0 * this->derivativeCoefficient) * simData.get_dt() / simData.hbar;
+				this->aX[index - 1].real = -0.5 * this->derivativeCoefficient * simData.get_dt() / simData.hbar;
 				this->aY[index - 1].imag = 0;
-				this->aY[index - 1].real = -0.5 * (-2.0 * this->derivativeCoefficient) * simData.get_dt() / simData.hbar;
+				this->aY[index - 1].real = -0.5 * this->derivativeCoefficient * simData.get_dt() / simData.hbar;
 
 				this->bX[index - 1].imag = 0;
-				this->bX[index - 1].real = 0.5 * (-2.0 * this->derivativeCoefficient) * simData.get_dt() / simData.hbar;
+				this->bX[index - 1].real = 0.5 * this->derivativeCoefficient * simData.get_dt() / simData.hbar;
 				this->bY[index - 1].imag = 0;
-				this->bY[index - 1].real = 0.5 * (-2.0 * this->derivativeCoefficient) * simData.get_dt() / simData.hbar;	
+				this->bY[index - 1].real = 0.5 * this->derivativeCoefficient * simData.get_dt() / simData.hbar;	
 
 				//Assign column indices
 				this->aColsX[index] = columnIndex + 1;
@@ -448,25 +448,25 @@ void TridiagonalMatrices::reassignMatrixValues(SimulationData &simData, Potentia
 
 				//Upper diagonal elements assigned
 				this->aX[index + 1].real = 0;
-				this->aX[index + 1].imag = -0.5 * (-2.0 * this->derivativeCoefficient) * simData.get_dt() / simData.hbar;
+				this->aX[index + 1].imag = -0.5 * this->derivativeCoefficient * simData.get_dt() / simData.hbar;
 				this->aY[index + 1].real = 0;
-				this->aY[index + 1].imag = -0.5 * (-2.0 * this->derivativeCoefficient) * simData.get_dt() / simData.hbar;
+				this->aY[index + 1].imag = -0.5 * this->derivativeCoefficient * simData.get_dt() / simData.hbar;
 
 				this->bX[index + 1].real = 0;
-				this->bX[index + 1].imag = 0.5 * (-2.0 * this->derivativeCoefficient) * simData.get_dt() / simData.hbar;
+				this->bX[index + 1].imag = 0.5 * this->derivativeCoefficient * simData.get_dt() / simData.hbar;
 				this->bY[index + 1].real = 0;
-				this->bY[index + 1].imag = 0.5 * (-2.0 * this->derivativeCoefficient) * simData.get_dt() / simData.hbar;				
+				this->bY[index + 1].imag = 0.5 * this->derivativeCoefficient * simData.get_dt() / simData.hbar;				
 
 				//Lower diagonal elements assigned
 				this->aX[index - 1].real = 0;
-				this->aX[index - 1].imag = -0.5 * (-2.0 * this->derivativeCoefficient) * simData.get_dt() / simData.hbar;
+				this->aX[index - 1].imag = -0.5 * this->derivativeCoefficient * simData.get_dt() / simData.hbar;
 				this->aY[index - 1].real = 0;
-				this->aY[index - 1].imag = -0.5 * (-2.0 * this->derivativeCoefficient) * simData.get_dt() / simData.hbar;
+				this->aY[index - 1].imag = -0.5 * this->derivativeCoefficient * simData.get_dt() / simData.hbar;
 
 				this->bX[index - 1].real = 0;
-				this->bX[index - 1].imag = 0.5 * (-2.0 * this->derivativeCoefficient) * simData.get_dt() / simData.hbar;
+				this->bX[index - 1].imag = 0.5 * this->derivativeCoefficient * simData.get_dt() / simData.hbar;
 				this->bY[index - 1].real = 0;
-				this->bY[index - 1].imag = 0.5 * (-2.0 * this->derivativeCoefficient) * simData.get_dt() / simData.hbar;	
+				this->bY[index - 1].imag = 0.5 * this->derivativeCoefficient * simData.get_dt() / simData.hbar;	
 
 
 

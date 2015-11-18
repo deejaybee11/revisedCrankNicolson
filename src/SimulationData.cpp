@@ -17,7 +17,7 @@ SimulationData::SimulationData(int num_x, int num_y) {
 
 	//Iteration parameters
 	this->dt = 0;
-	this->numSteps = 10000;
+	this->numSteps = 30000;
 	this->printSteps = 1000;
 	this->currStep = 0;
 	this->fileCount = 0;
