@@ -39,16 +39,19 @@ int main(){
 
 	//Potential class instance
 	Potential potentialData(simData);
+	potentialData.computeNonlinearEnergy(simData, psi);
+	potentialData.assignTimeEvolutionOperator(simData, potentialData, false);
 	printf("PotentialData Constructed\n");
 
 	//TridiagonalMatrix class instance
-	TridiagonalMatrices matrices(simData, potentialData);
+	TridiagonalMatrices matrices(simData);
 	printf("TridiagonalMatrices Constructed\n");
 
 	//Solve for ground state through Normalized Gradient Flow
 	Solver solver(simData, psi, matrices, potentialData);
 	printf("Solver Constructed\n");
-
+	
+	/*
 	//Initialise Pardiso parameters
 	solver.initialisePardiso(solver);
 	//Analyse input matrices
@@ -59,11 +62,11 @@ int main(){
 	printf("Beginning Ground State Solver\n");
 	for (simData.currStep = 0; simData.currStep < simData.numSteps; ++simData.currStep) {
 
-		solver.solvePardiso(solver, matrices, psi, simData, false);
+		solver.solvePardiso(solver, matrices, psi, simData, potentialData, false);
 	}
-
+	*/
 	//Reassign Matrix Values for Real Computation
-	matrices.reassignMatrixValues(simData, potentialData);	
+	matrices.reassignMatrixValues(simData);	
 
 	solver.initialisePardiso(solver);
 	solver.analysePardiso(solver, matrices, psi);
@@ -72,7 +75,7 @@ int main(){
 	//Solve for dynamics
 	for (simData.currStep = 0; simData.currStep < simData.numSteps; ++simData.currStep) {
 
-		solver.solvePardiso(solver, matrices, psi, simData, true);
+		solver.solvePardiso(solver, matrices, psi, simData, potentialData, true);
 	}
 
 	solver.clearPardiso(solver, matrices, psi);	

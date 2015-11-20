@@ -21,7 +21,7 @@ public:
 	//Numerical factorization of matrices
 	void factorizePardiso(Solver &solver, TridiagonalMatrices &matrices, WaveFunction &psi);
 	//Solve equation with iterative refinement
-	void solvePardiso(Solver &solver, TridiagonalMatrices &matrices, WaveFunction &psi, SimulationData &simData, bool isReal);
+	void solvePardiso(Solver &solver, TridiagonalMatrices &matrices, WaveFunction &psi, SimulationData &simData, Potential &potentialData, bool isReal);
 	//Release internal memory
 	void clearPardiso(Solver &solver, TridiagonalMatrices &matrices, WaveFunction &psi);
 

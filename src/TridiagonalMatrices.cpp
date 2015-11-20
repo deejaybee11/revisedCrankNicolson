@@ -10,7 +10,7 @@
 #include "../include/Potential.hpp"
 
 
-TridiagonalMatrices::TridiagonalMatrices(SimulationData &simData, Potential &potentialData) {
+TridiagonalMatrices::TridiagonalMatrices(SimulationData &simData) {
 
 
 	this->numMatrixElements = 3 * simData.getNumX();
@@ -135,14 +135,14 @@ TridiagonalMatrices::TridiagonalMatrices(SimulationData &simData, Potential &pot
 	//This is implemented via the A and B matrices being purely real valued
 
 	//Diagonal value
-	this->aX[0].real = 1 - 0.5 * (-2.0 * this->derivativeCoefficient + potentialData.harmonicTrap[0]) * simData.get_dt() / simData.hbar; 
+	this->aX[0].real = 1 - 0.5 * (-2.0 * this->derivativeCoefficient) * simData.get_dt() / simData.hbar; 
 	this->aX[0].imag = 0;
-	this->aY[0].real = 1 - 0.5 * (-2.0 * this->derivativeCoefficient + potentialData.harmonicTrap[0]) * simData.get_dt() / simData.hbar;
+	this->aY[0].real = 1 - 0.5 * (-2.0 * this->derivativeCoefficient) * simData.get_dt() / simData.hbar;
 	this->aY[0].imag = 0; 
 
-	this->bX[0].real = 1 + 0.5 * (-2.0 * this->derivativeCoefficient + potentialData.harmonicTrap[0]) * simData.get_dt() / simData.hbar;
+	this->bX[0].real = 1 + 0.5 * (-2.0 * this->derivativeCoefficient) * simData.get_dt() / simData.hbar;
 	this->bX[0].imag = 0; 
-	this->bY[0].real = 1 + 0.5 * (-2.0 * this->derivativeCoefficient + potentialData.harmonicTrap[0]) * simData.get_dt() / simData.hbar;
+	this->bY[0].real = 1 + 0.5 * (-2.0 * this->derivativeCoefficient) * simData.get_dt() / simData.hbar;
 	this->bY[0].imag = 0; 
 
 	//First off diagonal
@@ -170,14 +170,14 @@ TridiagonalMatrices::TridiagonalMatrices(SimulationData &simData, Potential &pot
 
 	//Diagonal value
 	this->aX[this->numMatrixElements - 1].imag = 0;
-	this->aX[this->numMatrixElements - 1].real = 1 - 0.5 * (-2.0 * this->derivativeCoefficient + potentialData.harmonicTrap[this->numMatrixElements - 1]) * simData.get_dt() / simData.hbar; 
+	this->aX[this->numMatrixElements - 1].real = 1 - 0.5 * (-2.0 * this->derivativeCoefficient) * simData.get_dt() / simData.hbar; 
 	this->aY[this->numMatrixElements - 1].imag = 0;
-	this->aY[this->numMatrixElements - 1].real = 1 - 0.5 * (-2.0 * this->derivativeCoefficient + potentialData.harmonicTrap[this->numMatrixElements - 1]) * simData.get_dt() / simData.hbar;
+	this->aY[this->numMatrixElements - 1].real = 1 - 0.5 * (-2.0 * this->derivativeCoefficient) * simData.get_dt() / simData.hbar;
 
 	this->bX[this->numMatrixElements - 1].imag = 0;
-	this->bX[this->numMatrixElements - 1].real = 1 + 0.5 * (-2.0 * this->derivativeCoefficient + potentialData.harmonicTrap[this->numMatrixElements - 1]) * simData.get_dt() / simData.hbar;
+	this->bX[this->numMatrixElements - 1].real = 1 + 0.5 * (-2.0 * this->derivativeCoefficient) * simData.get_dt() / simData.hbar;
 	this->bY[this->numMatrixElements - 1].imag = 0;
-	this->bY[this->numMatrixElements - 1].real = 1 + 0.5 * (-2.0 * this->derivativeCoefficient + potentialData.harmonicTrap[this->numMatrixElements - 1]) * simData.get_dt() / simData.hbar;
+	this->bY[this->numMatrixElements - 1].real = 1 + 0.5 * (-2.0 * this->derivativeCoefficient) * simData.get_dt() / simData.hbar;
 
 	//First off diagonal
 	this->aX[this->numMatrixElements - 2].imag = 0;
@@ -251,14 +251,14 @@ TridiagonalMatrices::TridiagonalMatrices(SimulationData &simData, Potential &pot
 
 				//Diagonal elements assigned
 				this->aX[index].imag = 0;
-				this->aX[index].real = 1 - 0.5 * (-2.0 * this->derivativeCoefficient + potentialData.harmonicTrap[i]) * simData.get_dt() / simData.hbar;
+				this->aX[index].real = 1 - 0.5 * (-2.0 * this->derivativeCoefficient) * simData.get_dt() / simData.hbar;
 				this->aY[index].imag = 0;
-				this->aY[index].real = 1 - 0.5 * (-2.0 * this->derivativeCoefficient + potentialData.harmonicTrap[i]) * simData.get_dt() / simData.hbar;
+				this->aY[index].real = 1 - 0.5 * (-2.0 * this->derivativeCoefficient) * simData.get_dt() / simData.hbar;
 
 				this->bX[index].imag = 0;
-				this->bX[index].real = 1 + 0.5 * (-2.0 * this->derivativeCoefficient + potentialData.harmonicTrap[i]) * simData.get_dt() / simData.hbar;
+				this->bX[index].real = 1 + 0.5 * (-2.0 * this->derivativeCoefficient) * simData.get_dt() / simData.hbar;
 				this->bY[index].imag = 0;
-				this->bY[index].real = 1 + 0.5 * (-2.0 * this->derivativeCoefficient + potentialData.harmonicTrap[i]) * simData.get_dt() / simData.hbar;
+				this->bY[index].real = 1 + 0.5 * (-2.0 * this->derivativeCoefficient) * simData.get_dt() / simData.hbar;
 
 				//Upper diagonal elements assigned
 				this->aX[index + 1].imag = 0;
@@ -350,20 +350,20 @@ TridiagonalMatrices::~TridiagonalMatrices() {
 };
 
 //Reassign values for real time
-void TridiagonalMatrices::reassignMatrixValues(SimulationData &simData, Potential &potentialData) {
+void TridiagonalMatrices::reassignMatrixValues(SimulationData &simData) {
 	std::cout << "Reassigning Matrix Values For Real Time Evolution" << std::endl;
 
 	int index = 4;
 	//Diagonal value
 	this->aX[0].real = 1;
-	this->aX[0].imag = -0.5 * (-2.0 * this->derivativeCoefficient + 0*potentialData.harmonicTrap[0]) * simData.get_dt() / simData.hbar; 
+	this->aX[0].imag = -0.5 * (-2.0 * this->derivativeCoefficient) * simData.get_dt() / simData.hbar; 
 	this->aY[0].real = 1;
-	this->aY[0].imag = -0.5 * (-2.0 * this->derivativeCoefficient + 0*potentialData.harmonicTrap[0]) * simData.get_dt() / simData.hbar;
+	this->aY[0].imag = -0.5 * (-2.0 * this->derivativeCoefficient) * simData.get_dt() / simData.hbar;
 
 	this->bX[0].real = 1;
-	this->bX[0].imag = 0.5 * (-2.0 * this->derivativeCoefficient + 0*potentialData.harmonicTrap[0]) * simData.get_dt() / simData.hbar;
+	this->bX[0].imag = 0.5 * (-2.0 * this->derivativeCoefficient) * simData.get_dt() / simData.hbar;
 	this->bY[0].real = 1;
-	this->bY[0].imag = 0.5 * (-2.0 * this->derivativeCoefficient + 0*potentialData.harmonicTrap[0]) * simData.get_dt() / simData.hbar;
+	this->bY[0].imag = 0.5 * (-2.0 * this->derivativeCoefficient) * simData.get_dt() / simData.hbar;
 
 	//First off diagonal
 	this->aX[1].real = 0;
@@ -390,14 +390,14 @@ void TridiagonalMatrices::reassignMatrixValues(SimulationData &simData, Potentia
 
 	//Diagonal value
 	this->aX[this->numMatrixElements - 1].real = 1;
-	this->aX[this->numMatrixElements - 1].imag = -0.5 * (-2.0 * this->derivativeCoefficient + 0*potentialData.harmonicTrap[0]) * simData.get_dt() / simData.hbar; 
+	this->aX[this->numMatrixElements - 1].imag = -0.5 * (-2.0 * this->derivativeCoefficient) * simData.get_dt() / simData.hbar; 
 	this->aY[this->numMatrixElements - 1].real = 1;
-	this->aY[this->numMatrixElements - 1].imag = -0.5 * (-2.0 * this->derivativeCoefficient + 0*potentialData.harmonicTrap[0]) * simData.get_dt() / simData.hbar;
+	this->aY[this->numMatrixElements - 1].imag = -0.5 * (-2.0 * this->derivativeCoefficient) * simData.get_dt() / simData.hbar;
 
 	this->bX[this->numMatrixElements - 1].real = 1;
-	this->bX[this->numMatrixElements - 1].imag = 0.5 * (-2.0 * this->derivativeCoefficient + 0*potentialData.harmonicTrap[0]) * simData.get_dt() / simData.hbar;
+	this->bX[this->numMatrixElements - 1].imag = 0.5 * (-2.0 * this->derivativeCoefficient) * simData.get_dt() / simData.hbar;
 	this->bY[this->numMatrixElements - 1].real = 1;
-	this->bY[this->numMatrixElements - 1].imag = 0.5 * (-2.0 * this->derivativeCoefficient + 0*potentialData.harmonicTrap[0]) * simData.get_dt() / simData.hbar;
+	this->bY[this->numMatrixElements - 1].imag = 0.5 * (-2.0 * this->derivativeCoefficient) * simData.get_dt() / simData.hbar;
 
 	//First off diagonal
 	this->aX[this->numMatrixElements - 2].real = 0;
@@ -437,14 +437,14 @@ void TridiagonalMatrices::reassignMatrixValues(SimulationData &simData, Potentia
 
 				//Diagonal elements assigned
 				this->aX[index].real = 1;
-				this->aX[index].imag = -0.5 * (-2.0 * this->derivativeCoefficient + 0*potentialData.harmonicTrap[i]) * simData.get_dt() / simData.hbar;
+				this->aX[index].imag = -0.5 * (-2.0 * this->derivativeCoefficient) * simData.get_dt() / simData.hbar;
 				this->aY[index].real = 1;
-				this->aY[index].imag = -0.5 * (-2.0 * this->derivativeCoefficient + 0*potentialData.harmonicTrap[i]) * simData.get_dt() / simData.hbar;
+				this->aY[index].imag = -0.5 * (-2.0 * this->derivativeCoefficient) * simData.get_dt() / simData.hbar;
 
 				this->bX[index].real = 1;
-				this->bX[index].imag = 0.5 * (-2.0 * this->derivativeCoefficient + 0*potentialData.harmonicTrap[i]) * simData.get_dt() / simData.hbar;
+				this->bX[index].imag = 0.5 * (-2.0 * this->derivativeCoefficient) * simData.get_dt() / simData.hbar;
 				this->bY[index].real = 1;
-				this->bY[index].imag = 0.5 * (-2.0 * this->derivativeCoefficient + 0*potentialData.harmonicTrap[i]) * simData.get_dt() / simData.hbar;
+				this->bY[index].imag = 0.5 * (-2.0 * this->derivativeCoefficient) * simData.get_dt() / simData.hbar;
 
 				//Upper diagonal elements assigned
 				this->aX[index + 1].real = 0;

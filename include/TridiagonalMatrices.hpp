@@ -10,10 +10,10 @@
 
 class TridiagonalMatrices {
 public:
-	TridiagonalMatrices(SimulationData &simData, Potential &potentialData);
+	TridiagonalMatrices(SimulationData &simData);
 	~TridiagonalMatrices();
 	
-	void reassignMatrixValues(SimulationData &simData, Potential &potentialData);
+	void reassignMatrixValues(SimulationData &simData);
 
 	//Matrices A_t, B_t, t = x,y, in linear equation A_t * Psi = B_t * Psi
 	MKL_Complex16 *aX = NULL;

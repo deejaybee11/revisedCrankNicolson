@@ -41,15 +41,15 @@ WaveFunction::WaveFunction(SimulationData &simData) {
 	for (int i = 0; i < simData.getNumX(); ++i) {
 		for (int j = 0; j < simData.getNumY(); ++j) {
 			index = simData.getNumY() * i + j;
-		/*
+		
 			this->psi[index].real = exp(-1.0 * (pow(simData.x[i], 2.0) / pow(simData.sigma_x, 2.0) + pow(simData.y[j], 2.0) / pow(simData.sigma_y, 2.0)));
 			this->psi[index].imag = 0;
 
 			this->absPsi[index] = 0;
 		
-		*/
+		/*	
 
-			if(pow((pow(simData.x[i],2.0) + pow(simData.y[j],2.0)),0.5) <= 7e-6)
+			if(pow((pow(simData.x[i],2.0) + pow(simData.y[j],2.0)),0.5) <= 5e-6)
 			{
 				this->psi[index].real = 1;
 			}
@@ -57,6 +57,7 @@ WaveFunction::WaveFunction(SimulationData &simData) {
 			{
 				this->psi[index].real=0;	
 			}
+		*/
 		}
 	}
 }

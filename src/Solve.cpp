@@ -110,7 +110,7 @@ void Solver::factorizePardiso(Solver &solver, TridiagonalMatrices &matrices, Wav
 	this->phase = 33;	
 }
 
-void Solver::solvePardiso(Solver &solver, TridiagonalMatrices &matrices, WaveFunction &psi, SimulationData &simData, bool isReal) {
+void Solver::solvePardiso(Solver &solver, TridiagonalMatrices &matrices, WaveFunction &psi, SimulationData &simData, Potential &potentialData, bool isReal) {
 	if (simData.currStep%simData.printSteps == 0) {
 		if (isReal) {
 			printf("Real Step %d out of %d\n", simData.currStep, simData.numSteps);
@@ -123,6 +123,16 @@ void Solver::solvePardiso(Solver &solver, TridiagonalMatrices &matrices, WaveFun
 			printf("Imaginary Step %d out of %d\n", simData.currStep, simData.numSteps);
 		}
 	}
+
+	//Performs multiplication of time evolution operator of potentials
+	potentialData.computeNonlinearEnergy(simData, psi);
+	if (isReal) {
+		potentialData.assignTimeEvolutionOperator(simData, potentialData, false);
+	}
+	else {
+		potentialData.assignTimeEvolutionOperator(simData, potentialData, true);
+	}
+	vzMul(simData.getN(), psi.psi, potentialData.timeEvolutionOperator, psi.psi);	
 
 	//Matrix multiplication of B*PSI in X direction
 	mkl_zcsrmm(&this->N, &this->nEquations, &this->nEquations, &this->nEquations, this->alpha, this->matrixDescription, matrices.bX, matrices.bColsX,
@@ -143,7 +153,7 @@ void Solver::solvePardiso(Solver &solver, TridiagonalMatrices &matrices, WaveFun
 			matrices.bRowsY, matrices.bRowsY+1, psi.psi, &this->nEquations, this->beta, psi.tempPsi, &this->nEquations);
 
 	//Pardiso Solver Step in Y direction
-	pardiso_64(this->pt, &this->maxFactorizations, &this->mnum, &this->matrixType, &this->phase, &this->nEquations, matrices.aX, matrices.aRowsX, matrices.aColsX,
+	pardiso_64(this->pt, &this->maxFactorizations, &this->mnum, &this->matrixType, &this->phase, &this->nEquations, matrices.aY, matrices.aRowsY, matrices.aColsY,
 			this->permutation, &this->numRightHandSides, this->iParameters, &this->messageLevel, psi.tempPsi, psi.psi, &this->error);
 	if (this->error != 0) {
 		throw std::invalid_argument("PARDISO SOLVER Y");

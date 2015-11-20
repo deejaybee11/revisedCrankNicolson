@@ -4,9 +4,11 @@
 #include <iostream>
 #include <random>
 #include <chrono>
+#include <stdexcept>
 
 #include "mkl.h"
 #include "../include/SimulationData.hpp"
+#include "../include/WaveFunction.hpp"
 
 /**
  *This class constructs the arrays holding the potentials present in the GPE. The standard harmonic trap is present along with a
@@ -23,19 +25,33 @@ Potential::Potential(SimulationData &simData) {
 	try {
 		this->harmonicTrap = (double*)mkl_malloc(simData.getN() * sizeof(double), 64);
 		this->specklePotential = (double*)mkl_malloc(simData.getN() * sizeof(double), 64);
+		this->nonLinearPotential = (double*)mkl_malloc(simData.getN() * sizeof(double), 64);
+		this->timeEvolutionOperator = (MKL_Complex16*)mkl_malloc(simData.getN() * sizeof(double), 64);
 		if (harmonicTrap == NULL) {
 			throw -1;
 		}
 		if (specklePotential == NULL) {
 			throw -2;
 		}
+		if (nonLinearPotential == NULL) {
+			throw -3;
+		}
+		if (timeEvolutionOperator == NULL) {
+			throw -4;
+		}
 	}
 	catch (int e) {
 		if (e == -1) {
 			std::cout << "EXCEPTION " << e << " HARMONIC TRAP NOT ALLOCATED" << std::endl;
 		}
-		if ( e == -2) {
+		if (e == -2) {
 			std::cout << "EXCEPTION " << e << " SPECKLE POTENTIAL NOT ALLOCATED" << std::endl;
+		}
+		if (e == -3) {
+			std::cout << "EXCEPTION " << e << " NONLINEAR POTENTIAL NOT ALLOCATED" << std::endl;
+		}
+		if (e == -4) {
+			std::cout << "EXCEPTION " << e << " TIME EVOLUTION NOT ALLOCATED" << std::endl;
 		}
 	}
 
@@ -100,8 +116,7 @@ Potential::Potential(SimulationData &simData) {
 	double kxCut = 1.0 / (2.0 * this->correlationLengthP_X);
 	double kyCut = 1.0 / (2.0 * this->correlationLengthP_Y);
 
-	//Time step is set based on the energy scale to ensure it is slowest process involved with speckle
-	simData.set_dt(0.001 * simData.hbar / this->correlationEnergy);
+
 		
 	//Create exponentially correlated numbers
 	for (int i = 0; i < simData.getN(); ++i) {
@@ -203,4 +218,30 @@ Potential::~Potential() {
 };
 
 
+void Potential::computeNonlinearEnergy(SimulationData &simData, WaveFunction &psi) {
+	double temp;
 
+	psi.getAbs(simData.getN());
+	for (int i = 0; i < simData.getN(); ++i) {
+		temp = 	simData.getN() * simData.U * psi.absPsi[i];
+		this->nonLinearPotential[i] = temp;
+	}
+
+}
+
+void Potential::assignTimeEvolutionOperator(SimulationData &simData, Potential &potentialData, bool trapOn) {
+
+	double theta;
+
+	for (int i = 0; i < simData.getN(); ++i) {
+		if (trapOn == true) {
+			theta = (this->nonLinearPotential[i] + this->harmonicTrap[i] + this->specklePotential[i]) * simData.get_dt() / simData.hbar;
+		}
+		else {
+			theta = (this->nonLinearPotential[i] /*+ this->specklePotential[i]*/) * simData.get_dt() / simData.hbar;
+		}
+		this->timeEvolutionOperator[i].real = cos(theta);
+		this->timeEvolutionOperator[i].imag = -1.0 * sin(theta);
+	}
+
+}
