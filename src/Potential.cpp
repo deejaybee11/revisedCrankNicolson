@@ -5,10 +5,12 @@
 #include <random>
 #include <chrono>
 #include <stdexcept>
+#include <sys/stat.h>
 
 #include "mkl.h"
 #include "../include/SimulationData.hpp"
 #include "../include/WaveFunction.hpp"
+#include "../include/SaveData.hpp"
 
 /**
  *This class constructs the arrays holding the potentials present in the GPE. The standard harmonic trap is present along with a
@@ -26,7 +28,7 @@ Potential::Potential(SimulationData &simData) {
 		this->harmonicTrap = (double*)mkl_malloc(simData.getN() * sizeof(double), 64);
 		this->specklePotential = (double*)mkl_malloc(simData.getN() * sizeof(double), 64);
 		this->nonLinearPotential = (double*)mkl_malloc(simData.getN() * sizeof(double), 64);
-		this->timeEvolutionOperator = (MKL_Complex16*)mkl_malloc(simData.getN() * sizeof(double), 64);
+		this->timeEvolutionOperator = (MKL_Complex16*)mkl_malloc(simData.getN() * sizeof(MKL_Complex16), 64);
 		if (harmonicTrap == NULL) {
 			throw -1;
 		}
@@ -94,6 +96,13 @@ Potential::Potential(SimulationData &simData) {
 		}
 	}
 
+	for (int i = 0; i < simData.getN(); ++i) {
+		phases[i] = 0.0;
+		kFilter[i] = 0.0;
+		vRandom[i] = 0.0;
+		electricField[i].real = 0.0;
+		electricField[i].imag = 0.0;
+	}
 
 	//Construct the random seed for the speckle
 	unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
@@ -202,7 +211,7 @@ Potential::Potential(SimulationData &simData) {
 
 		}
 	}
-
+	saveFITS(vRandom, "fits/speckle.fits", simData);
 	//Free memory
 	mkl_free(kFilter);
 	mkl_free(electricField);
@@ -214,34 +223,45 @@ Potential::Potential(SimulationData &simData) {
 Potential::~Potential() {
 	mkl_free(harmonicTrap);
 	mkl_free(specklePotential);
+	mkl_free(timeEvolutionOperator);
 	std::cout << "Potential Memory Cleared" << std::endl;
 };
 
 
 void Potential::computeNonlinearEnergy(SimulationData &simData, WaveFunction &psi) {
 	double temp;
-
-	psi.getAbs(simData.getN());
+	struct stat buffer;
+	#pragma omp parallel for private(temp)
 	for (int i = 0; i < simData.getN(); ++i) {
-		temp = 	simData.getN() * simData.U * psi.absPsi[i];
+		temp = 	simData.numAtoms * simData.U * (psi.psi[i].real * psi.psi[i].real + psi.psi[i].imag * psi.psi[i].imag);//psi.absPsi[i];
 		this->nonLinearPotential[i] = temp;
 	}
-
+	if (!stat("fits/nonlin.fits", &buffer) == 0) {
+		saveFITS(nonLinearPotential, "fits/nonlin.fits", simData);	
+	}
 }
 
-void Potential::assignTimeEvolutionOperator(SimulationData &simData, Potential &potentialData, bool trapOn) {
+void Potential::assignTimeEvolutionOperator(SimulationData &simData, Potential &potentialData, bool trapOn, bool isReal) {
 
 	double theta;
-
+	#pragma omp parallel for private(theta)
 	for (int i = 0; i < simData.getN(); ++i) {
 		if (trapOn == true) {
-			theta = (this->nonLinearPotential[i] + this->harmonicTrap[i] + this->specklePotential[i]) * simData.get_dt() / simData.hbar;
+			theta = (this->nonLinearPotential[i] + this->harmonicTrap[i] /*+ this->specklePotential[i]*/) * simData.get_dt() / simData.hbar;
 		}
 		else {
 			theta = (this->nonLinearPotential[i] /*+ this->specklePotential[i]*/) * simData.get_dt() / simData.hbar;
 		}
-		this->timeEvolutionOperator[i].real = cos(theta);
-		this->timeEvolutionOperator[i].imag = -1.0 * sin(theta);
+		if (isReal == true)
+		{
+			this->timeEvolutionOperator[i].real = cos(theta);
+			this->timeEvolutionOperator[i].imag = -1.0 * sin(theta);
+
+		}
+		else {
+			this->timeEvolutionOperator[i].real = exp(-1.0 * theta);
+			this->timeEvolutionOperator[i].imag = 0;
+		}
 	}
 
 }

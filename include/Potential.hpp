@@ -24,7 +24,7 @@ public:
 	double correlationEnergy;				//"energy" of the correlation
 
 	void computeNonlinearEnergy(SimulationData &simData, WaveFunction &psi);
-	void assignTimeEvolutionOperator(SimulationData &simData, Potential &potentialData, bool trapOn);
+	void assignTimeEvolutionOperator(SimulationData &simData, Potential &potentialData, bool trapOn, bool isReal);
 
 	
 private:

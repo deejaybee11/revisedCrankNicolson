@@ -10,7 +10,7 @@
 class WaveFunction {
 public:
 	
-	WaveFunction(SimulationData &simData);
+	WaveFunction(SimulationData &simData, double *harmonicTrap);
 	~WaveFunction();
 	
 	void getAbs(int N);				//Calculates absolute square of input array and saves to WaveFunction.absPsi

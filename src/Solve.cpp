@@ -127,10 +127,10 @@ void Solver::solvePardiso(Solver &solver, TridiagonalMatrices &matrices, WaveFun
 	//Performs multiplication of time evolution operator of potentials
 	potentialData.computeNonlinearEnergy(simData, psi);
 	if (isReal) {
-		potentialData.assignTimeEvolutionOperator(simData, potentialData, false);
+		potentialData.assignTimeEvolutionOperator(simData, potentialData, false, true);
 	}
 	else {
-		potentialData.assignTimeEvolutionOperator(simData, potentialData, true);
+		potentialData.assignTimeEvolutionOperator(simData, potentialData, true, false);
 	}
 	vzMul(simData.getN(), psi.psi, potentialData.timeEvolutionOperator, psi.psi);	
 

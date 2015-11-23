@@ -16,14 +16,13 @@ SimulationData::SimulationData(int num_x, int num_y) {
 	this->length_y = 80e-6;
 
 	//Iteration parameters
-	this->dt = 0;
-	this->numSteps = 30000;
-	this->printSteps = 500;
+	this->numSteps = 10000000;
+	this->printSteps = 500000;
 	this->currStep = 0;
 	this->fileCount = 0;
 
 	//Time step is set based on the energy scale to ensure it is slowest process involved with speckle
-	this->dt = 1e-8;
+	this->dt = 1e-9;
 	std::cout << "DT = " << this->dt << std::endl;
 
 	//Physical properties of Gaussian wavefunction
@@ -40,9 +39,11 @@ SimulationData::SimulationData(int num_x, int num_y) {
 	this->scatteringLength = 5.186e-9;
 	this->numAtoms = 30000.0;
 	this->omega_bar = pow(this->omega_x * this->omega_x * this->omega_y, (1.0/3.0));
-	this->U =(1.0 / pow(this->hbar / (this->omega_bar * this->mass), 0.5)) *  (4 * M_PI * pow(this->hbar, 2.0) * this->scatteringLength) / this->mass;
-	this->chemicalPotential = (this->hbar * this->omega_bar / 2.0) * pow((15 * this->numAtoms * this->scatteringLength *
-			       	(1.0 / pow(this->hbar / (this->omega_bar * this->mass), 0.5))), (2.0 / 5.0));
+	double lx = pow(this->hbar / (this->omega_bar * this->mass), 0.5);
+	std::cout << "lx is " << lx << std::endl;
+	this->U = ((4 * M_PI * pow(this->hbar, 2.0) * this->scatteringLength) / this->mass) / lx;
+	this->chemicalPotential = (this->hbar * this->omega_bar / 2.0) * pow((15 * this->numAtoms * this->scatteringLength) / lx, (2.0 / 5.0));
+	std::cout << "U is " << this->U << std::endl;
 	this->healingLength = this->hbar / pow(2.0 * this->mass * this->chemicalPotential, 0.5);
 
 

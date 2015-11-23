@@ -19,11 +19,11 @@ int main(){
 
 	//Set Environment variables for OpenMP
 	//Sets length of time a spawned thread stays alive
-	putenv("KMP_BLOCKTIME=infinite");
+//	putenv("KMP_BLOCKTIME=infinite");
 	//Sets parameters for parallelization
-	putenv("KMP_AFFINITY=granularity=fine,compact,norespect");
+//	putenv("KMP_AFFINITY=granularity=fine,compact,norespect");
 	//Sets number of threads to use to maximum number available
-	mkl_set_num_threads(mkl_get_max_threads());
+//	mkl_set_num_threads(mkl_get_max_threads());
 	//Disables mkl's fast memory management to reduce CPU overhead
 	mkl_disable_fast_mm();
 
@@ -32,16 +32,22 @@ int main(){
 	SimulationData simData(256, 256);	
 	printf("SimulationData Constructed\n");
 	
-	//WaveFunction class instance.
-	WaveFunction psi(simData);
-	printf("WaveFunction Constructed\n");
-	psi.getAbs(simData.getN());
-
 	//Potential class instance
 	Potential potentialData(simData);
+	
+	//WaveFunction class instance.
+	WaveFunction psi(simData, potentialData.harmonicTrap);
+	printf("WaveFunction Constructed\n");
+	psi.getAbs(simData.getN());
+	psi.getNorm(simData);
+
 	potentialData.computeNonlinearEnergy(simData, psi);
-	potentialData.assignTimeEvolutionOperator(simData, potentialData, false);
+	potentialData.assignTimeEvolutionOperator(simData, potentialData, false, true);
 	printf("PotentialData Constructed\n");
+	
+	psi.getAbs(simData.getN());
+	system("rm thomasFermi.fits");
+	saveFITS(psi.absPsi, "thomasFermi.fits", simData); 
 
 	//TridiagonalMatrix class instance
 	TridiagonalMatrices matrices(simData);
@@ -51,7 +57,7 @@ int main(){
 	Solver solver(simData, psi, matrices, potentialData);
 	printf("Solver Constructed\n");
 	
-	/*
+	
 	//Initialise Pardiso parameters
 	solver.initialisePardiso(solver);
 	//Analyse input matrices
@@ -64,7 +70,9 @@ int main(){
 
 		solver.solvePardiso(solver, matrices, psi, simData, potentialData, false);
 	}
-	*/
+	psi.getAbs(simData.getN());
+	system("rm groundState.fits");
+	saveFITS(psi.absPsi, "groundState.fits", simData);	
 	//Reassign Matrix Values for Real Computation
 	matrices.reassignMatrixValues(simData);	
 
